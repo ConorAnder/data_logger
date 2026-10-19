@@ -1,6 +1,7 @@
 #include "include/clock.h"
 #include "include/dht.h"
 #include "include/store.h"
+#include "include/wifi.h"
 
 // Print in csv format
 const char format[] = "%04d-%02d-%02d %02d:%02d:%02d,%.1f,%.1f";
@@ -10,12 +11,12 @@ void setup() {
     InitClock(19, 18, 21);
     InitDHT(4);
     if (InitFileStorage()) while (1);
-    FormatFileStorage();
-    PrintCSV();
-    while (1);
+    InitWifi();
 }
 
 void loop() {
+    UpdateWifi();
+
     if (PollSensors()) {
         int* dt = GetDateTime();
         float* sn = GetSensorVals();
