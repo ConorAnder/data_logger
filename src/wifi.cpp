@@ -13,6 +13,15 @@ void InitWifi() {
 
     server.on("/download", HTTP_GET, DownloadCSV);
 
+    server.on("/clear", HTTP_POST, []() {
+        if (FormatFileStorage()) {
+            server.send(500, "text/plain", "Failed to format storage");
+            return;
+        }
+
+        server.send(200, "text/plain", "Storage cleared successfully");
+    });
+
     server.begin();
 }
 
