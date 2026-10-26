@@ -10,3 +10,5 @@ s.write(msg.encode('UTF-8'))
 
 print(s.readline().decode().strip())
 s.close()
+
+# curl -X POST http://<IP>/clear in order to clear the csv
