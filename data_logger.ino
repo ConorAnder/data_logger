@@ -8,7 +8,7 @@ const char format[] = "%04d-%02d-%02d %02d:%02d:%02d,%.1f,%.1f";
 
 void setup() {
     Serial.begin(115200);
-    InitClock(19, 18, 21);
+    InitClock(19, 18, 21);      // DAT, CLK, RST
     InitDHT(4);
     if (InitFileStorage()) while (1);
     InitWifi();
@@ -16,6 +16,7 @@ void setup() {
 
 void loop() {
     UpdateWifi();
+    SyncClock();
 
     if (PollSensors()) {
         int* dt = GetDateTime();
@@ -24,7 +25,7 @@ void loop() {
         if (!isnan(sn[0]) && !isnan(sn[1])) {
             char datapoint[32];
             snprintf(datapoint, sizeof(datapoint), format, dt[0], dt[1], dt[2], dt[3], dt[4], dt[5], sn[0], sn[1]);
-            //Serial.println(datapoint);
+            Serial.println(datapoint);
             if (StoreDataPoint(datapoint))
                 Serial.println("Failed to store datapoint");
         }
