@@ -25,9 +25,10 @@ void loop() {
         if (!isnan(sn[0]) && !isnan(sn[1])) {
             char datapoint[32];
             snprintf(datapoint, sizeof(datapoint), format, dt[0], dt[1], dt[2], dt[3], dt[4], dt[5], sn[0], sn[1]);
-            Serial.println(datapoint);
+            // Serial.println(datapoint);
             if (StoreDataPoint(datapoint))
                 Serial.println("Failed to store datapoint");
+            Serial.println(email);
         }
     }
 }
