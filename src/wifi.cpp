@@ -4,10 +4,10 @@ static WiFiManager wm;
 
 WebServer server(80);
 
-char url[TOKEN_LENGTH];
-char api[TOKEN_LENGTH];
-char email[TOKEN_LENGTH];
-char pass[TOKEN_LENGTH];
+char url[TOKEN_LENGTH] = "url";
+char api[TOKEN_LENGTH] = "api";
+char email[TOKEN_LENGTH] = "email";
+char pass[TOKEN_LENGTH] = "password";
 static WiFiManagerParameter wm_firebase_url("url", "Database URL", url, TOKEN_LENGTH);
 static WiFiManagerParameter wm_firebase_key("key", "API key", api, TOKEN_LENGTH);
 static WiFiManagerParameter wm_firebase_email("email", "User email", email, TOKEN_LENGTH);
@@ -17,6 +17,7 @@ void InitWifi() {
     // Initialise database connection parameters
     Preferences pr;
     if (pr.begin("firebase", true)) {
+        strcpy(url, pr.getString("url", "").c_str());
         strcpy(api, pr.getString("api_key", "").c_str());
         strcpy(email, pr.getString("email", "").c_str());
         strcpy(pass, pr.getString("password", "").c_str());
@@ -68,7 +69,7 @@ void UpdateWifi() {
 }
 
 void DownloadCSV() {
-    File f = LittleFS.open("/datapoints.csv", FILE_READ);
+    File f = LittleFS.open(json_filepath, FILE_READ);
 
     if (!f) {
         server.send(404, "text/plain", "CSV file not found");

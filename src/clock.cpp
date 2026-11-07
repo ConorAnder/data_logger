@@ -51,25 +51,13 @@ int* GetDateTime() {
     static int dt_arr[6];
 
     RtcDateTime now = rtc->GetDateTime();
-
-    // if (now.IsValid()) {
-        prev = now;
-        dt_arr[0] = now.Year();
-        dt_arr[1] = now.Month();
-        dt_arr[2] = now.Day();
-        dt_arr[3] = now.Hour();
-        dt_arr[4] = now.Minute();
-        dt_arr[5] = now.Second();
-    // }
-    // else {
-    //     prev += period;  // Add 5 seconds
-    //     dt_arr[0] = prev.Year();
-    //     dt_arr[1] = prev.Month();
-    //     dt_arr[2] = prev.Day();
-    //     dt_arr[3] = prev.Hour();
-    //     dt_arr[4] = prev.Minute();
-    //     dt_arr[5] = prev.Second();
-    // }
+    prev = now;
+    dt_arr[0] = now.Year();
+    dt_arr[1] = now.Month();
+    dt_arr[2] = now.Day();
+    dt_arr[3] = now.Hour();
+    dt_arr[4] = now.Minute();
+    dt_arr[5] = now.Second();
 
     return dt_arr;
 }

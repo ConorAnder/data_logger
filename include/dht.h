@@ -1,3 +1,4 @@
+#pragma once
 #include <DHT.h>
 
 void InitDHT(int datapin);

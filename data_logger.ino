@@ -2,6 +2,7 @@
 #include "include/dht.h"
 #include "include/store.h"
 #include "include/wifi.h"
+#include "include/database.h"
 
 // Print in csv format
 const char format[] = "%04d-%02d-%02d %02d:%02d:%02d,%.1f,%.1f";
@@ -12,11 +13,13 @@ void setup() {
     InitDHT(4);
     if (InitFileStorage()) while (1);
     InitWifi();
+    InitDatabase();
 }
 
 void loop() {
     UpdateWifi();
     SyncClock();
+    UpdateApp();
 
     if (PollSensors()) {
         int* dt = GetDateTime();
@@ -28,7 +31,8 @@ void loop() {
             // Serial.println(datapoint);
             if (StoreDataPoint(datapoint))
                 Serial.println("Failed to store datapoint");
-            Serial.println(email);
         }
+        if (SendData() && ClearBuffer()); 
+        else Serial.println("Database update failed");
     }
 }

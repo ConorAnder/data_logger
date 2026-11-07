@@ -1,6 +1,7 @@
 #include "include/store.h"
 
-const char filepath[] = "/datapoints.csv";
+const char csv_filepath[] = "/datapoints.csv";
+const char json_filepath[] = "/datapoints.jsonl";
 
 bool InitFileStorage() {
     if (!LittleFS.begin(false)) {
@@ -22,18 +23,47 @@ bool FormatFileStorage() {
 }
 
 bool StoreDataPoint(char* datapoint) {
-    File f = LittleFS.open(filepath, FILE_APPEND);
-    if (!f) return true;
+    // Store CSV backup
+    File cf = LittleFS.open(csv_filepath, FILE_APPEND);
+    if (!cf) return true;
 
     bool status = false;
-    if (!f.println(datapoint)) status = true;
+    if (!cf.println(datapoint)) status = true;
 
-    f.close();
+    cf.close();
+
+    // Create JSON buffer datapoint
+    const char* delimiter = ",";
+    char* str = strtok(datapoint, delimiter);
+    JsonDocument doc;
+    JsonObject obj = doc[str].to<JsonObject>();
+
+    str = strtok(nullptr, delimiter);
+    obj["temperature"] = String(str).toFloat();
+
+    str = strtok(nullptr, delimiter);
+    obj["humidity"] = String(str).toFloat();
+
+    String json_datapoint;
+    serializeJson(doc, json_datapoint);
+
+    // Store JSON buffer datapoint
+    File jf = LittleFS.open(json_filepath, FILE_APPEND);
+    if (!jf) return true;
+
+    if (!jf.println(json_datapoint)) status = true;
+
+    jf.close();
+
     return status;
 }
 
-bool PrintCSV() {
-    File f = LittleFS.open("/datapoints.csv", FILE_READ);
+bool ClearBuffer() {
+    return LittleFS.remove(json_filepath);
+}
+
+bool PrintFile(const char* filepath) {
+    File f = LittleFS.open(filepath, FILE_READ);
     if (!f) return true;
 
     while (f.available())
