@@ -5,7 +5,7 @@
 #include "include/store.h"
 #include <Preferences.h>
 
-#define TOKEN_LENGTH 64
+#define TOKEN_LENGTH 128
 extern char url[];
 extern char api[];
 extern char email[];

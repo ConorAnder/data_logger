@@ -11,7 +11,7 @@ void setup() {
     Serial.begin(115200);
     InitClock(19, 18, 21);      // DAT, CLK, RST
     InitDHT(4);
-    if (InitFileStorage()) while (1);
+    InitFileStorage();
     InitWifi();
     InitDatabase();
 }
@@ -32,7 +32,8 @@ void loop() {
             if (StoreDataPoint(datapoint))
                 Serial.println("Failed to store datapoint");
         }
-        if (SendData() && ClearBuffer()); 
-        else Serial.println("Database update failed");
+    }
+    if (SendData() && ClearBuffer()) {
+        Serial.println("Datapoint written");
     }
 }

@@ -14,8 +14,6 @@ const int period = 300;
 void InitDatabase() {
     user_auth = new UserAuth(api, email, pass);
     ssl_client.setInsecure();
-    ssl_client.setConnectionTimeout(1000);
-    ssl_client.setHandshakeTimeout(5);
 
     initializeApp(aClient, app, getAuth(*user_auth), processData, "🔐 authTask");
     app.getApp<RealtimeDatabase>(Database);
@@ -55,13 +53,9 @@ bool SendData() {
     // Send JSON to database
     String msg;
     serializeJson(batch, msg);
-    Serial.println(msg);
 
     bool status = Database.update<object_t>(aClient, DB_FILEPATH, object_t(msg));
 
-    if (!success) {
-        Serial.printf("Firebase error %d: %s\n", aClient.lastError().code(), aClient.lastError().message().c_str());
-    }
 
     return status;
 }
