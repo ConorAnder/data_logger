@@ -57,7 +57,13 @@ bool SendData() {
     serializeJson(batch, msg);
     Serial.println(msg);
 
-    return Database.update<object_t>(aClient, DB_FILEPATH, object_t(msg));
+    bool status = Database.update<object_t>(aClient, DB_FILEPATH, object_t(msg));
+
+    if (!success) {
+        Serial.printf("Firebase error %d: %s\n", aClient.lastError().code(), aClient.lastError().message().c_str());
+    }
+
+    return status;
 }
 
 bool ShouldSendData() {
